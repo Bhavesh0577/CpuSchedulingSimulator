@@ -101,29 +101,34 @@ public class SchedulerService {
         // Create a copy of processes and sort by arrival time
         List<Process> sortedProcesses = new ArrayList<>(processes);
         sortedProcesses.sort(Comparator.comparingInt(Process::getArrivalTime));
-
+        
         int time = 0;
         Queue<Process> readyQueue = new LinkedList<>();
         Map<String, Integer> remainingTime = new HashMap<>();
         List<Process> result = new ArrayList<>();
         Set<String> completed = new HashSet<>();
-
+        Set<String> addedToQueue = new HashSet<>();
+        
         // Initialize remaining time for all processes
         for (Process p : processes) {
             remainingTime.put(p.getPid(), p.getBurstTime());
         }
-
+        
         int processIndex = 0;
-
+        
         // Continue until all processes are completed
         while (completed.size() < processes.size()) {
             // Add all processes that have arrived by current time to ready queue
-            while (processIndex < sortedProcesses.size() &&
-                    sortedProcesses.get(processIndex).getArrivalTime() <= time) {
-                readyQueue.add(sortedProcesses.get(processIndex));
+            while (processIndex < sortedProcesses.size() && 
+                   sortedProcesses.get(processIndex).getArrivalTime() <= time) {
+                Process p = sortedProcesses.get(processIndex);
+                if (!addedToQueue.contains(p.getPid())) {
+                    readyQueue.add(p);
+                    addedToQueue.add(p.getPid());
+                }
                 processIndex++;
             }
-
+            
             // If ready queue is empty, jump to next process arrival time
             if (readyQueue.isEmpty()) {
                 if (processIndex < sortedProcesses.size()) {
@@ -133,30 +138,34 @@ public class SchedulerService {
                     break;
                 }
             }
-
+            
             // Get the next process from ready queue
             Process current = readyQueue.poll();
-
+            
             // Skip if process is already completed
             if (completed.contains(current.getPid())) {
                 continue;
             }
-
+            
             int remaining = remainingTime.get(current.getPid());
             int timeToExecute = Math.min(quantum, remaining);
-
+            
             // Execute the process
             time += timeToExecute;
             remaining -= timeToExecute;
             remainingTime.put(current.getPid(), remaining);
-
+            
             // Add any newly arrived processes to ready queue
-            while (processIndex < sortedProcesses.size() &&
-                    sortedProcesses.get(processIndex).getArrivalTime() <= time) {
-                readyQueue.add(sortedProcesses.get(processIndex));
+            while (processIndex < sortedProcesses.size() && 
+                   sortedProcesses.get(processIndex).getArrivalTime() <= time) {
+                Process p = sortedProcesses.get(processIndex);
+                if (!addedToQueue.contains(p.getPid())) {
+                    readyQueue.add(p);
+                    addedToQueue.add(p.getPid());
+                }
                 processIndex++;
             }
-
+            
             // Check if process is completed
             if (remaining == 0) {
                 current.setCompletionTime(time);
@@ -169,7 +178,7 @@ public class SchedulerService {
                 readyQueue.add(current);
             }
         }
-
+        
         return result;
     }
 }
