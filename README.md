@@ -347,30 +347,6 @@ npm start
 - **Frontend Port**: 3000 (configurable in `next.config.ts`)
 - **API Base URL**: `http://localhost:8080/api/scheduler`
 
-## 🚀 Deployment
-
-### Backend Deployment
-
-```bash
-# Build JAR file
-./mvnw clean package
-
-# Run JAR file
-java -jar target/cpu-simulator-0.0.1-SNAPSHOT.jar
-```
-
-### Frontend Deployment
-
-```bash
-# Build for production
-npm run build
-
-# Start production server
-npm start
-
-# Or deploy to platforms like Vercel, Netlify, etc.
-```
-
 ## 🤝 Contributing
 
 1. **Fork the Repository**
@@ -414,21 +390,6 @@ npm start
 - **Backend**: Add `--debug` flag when running Spring Boot
 - **Frontend**: Next.js provides detailed error messages in development mode
 
-## 📝 License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## 👥 Authors
-
-- **Bhavesh** - [GitHub Profile](https://github.com/Bhavesh0577)
-
-## 🙏 Acknowledgments
-
-- Spring Boot team for the excellent framework
-- Next.js team for the React framework
-- Tailwind CSS for the utility-first CSS framework
-- Lucide React for the beautiful icons
-- Operating Systems concepts and CPU scheduling theory
 
 ## 📈 Future Enhancements
 
